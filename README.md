@@ -1,7 +1,7 @@
 # genetic-search
 
-Supporting code for the paper "". 
-It includes the implementation of the genetic algorithm described in the paper, used to find the counterexample.
+Supporting code for the paper "_A genetic algorithm to search the space of Ehrhart h∗-vectors_" [(arXiv)](https://arxiv.org/abs/2309.16848). 
+It includes the implementation of the genetic algorithm described in the paper, used to find the mentioned counterexample.
 
 ## Installation
 
