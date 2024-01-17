@@ -200,6 +200,10 @@ def _h_cartesian_prod_from_two_hs(individual):
     )
 
 
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+
 def genetic_search(
     parameters,
 ):
@@ -232,6 +236,16 @@ def genetic_search(
     # log the first values
     with open(filename, "a") as f:
         f.write(f"{generation}\t{h}\t{scores[h]}\t{scores[h]}\n")
+
+    # Set up the plot
+    avg_scores = []
+    best_scores = []
+    total_mutations_attempts = 0
+    plt.ion()
+    fig = plt.figure()
+    gs = gridspec.GridSpec(2, 1, height_ratios=[1, 4])
+    ax0 = plt.subplot(gs[0])
+    ax1 = plt.subplot(gs[1])
 
     while True:
         # start a new generation
@@ -307,6 +321,31 @@ def genetic_search(
                 avg_score = sum(sorted(scores.values())[:min_pop]) / min_pop
                 with open(filename, "a") as f:
                     f.write(f"{generation}\t{h_new}\t{score_h_new}\t{avg_score}\n")
+
+                avg_scores.append(avg_score)
+                best_scores.append(0)
+                ax1.clear()
+                ax1.plot(avg_scores, label="Average")
+                ax1.plot(best_scores, label="Best")
+                ax1.set_xlabel("Generation")
+                ax1.set_ylabel("Score")
+                ax1.set_ylim([0, max(1.5, max(best_scores) * 1.1)])
+                ax1.legend()
+
+                ax0.clear()
+                ax0.axis("off")
+                ax0.text(
+                    0.02,
+                    0.5,
+                    (
+                        f"Initial h: {parameters['starting_population'][0]}\n"
+                        f"Best h: {h_new}\n"
+                        f"Mutation attempts: {total_mutations_attempts}"
+                    ),
+                    transform=ax0.transAxes,
+                )
+                plt.ioff()
+                plt.show()
                 return h_new
 
             # add h_new to the population
@@ -332,6 +371,34 @@ def genetic_search(
         print(f"Best score: {best_h_score}")
         print(f"Best h: {best_h}")
         print()
+
+        # Update the plot
+        avg_scores.append(avg_score)
+        best_scores.append(best_h_score)
+        ax1.clear()
+        ax1.plot(avg_scores, label="Average")
+        ax1.plot(best_scores, label="Best")
+        ax1.set_xlabel("Generation")
+        ax1.set_ylabel("Score")
+        ax1.set_ylim([0, max(1.5, max(best_scores) * 1.1)])
+        ax1.legend()
+
+        total_mutations_attempts += n_mutation_attempts
+        ax0.clear()
+        ax0.axis("off")
+        ax0.text(
+            0.02,
+            0.5,
+            (
+                f"Initial h: {parameters['starting_population'][0]}\n"
+                f"Best h: {best_h}\n"
+                f"Mutation attempts: {total_mutations_attempts}"
+            ),
+            transform=ax0.transAxes,
+        )
+
+        fig.canvas.draw()
+        plt.pause(0.001)
 
         # log generation summary to file
         with open(filename, "a") as f:
@@ -400,7 +467,7 @@ if __name__ == "__main__":
         "h_cartesian_product": _h_cartesian_prod_from_single_h,
         "p_mutation": 0.5,
         "max_pop": 30,
-        "min_pop": 5,
+        "min_pop": 29,
         "penalty_factor": 1.05,
     }
 
