@@ -3,7 +3,9 @@
 Supporting code for the paper "_A genetic algorithm to search the space of Ehrhart h∗-vectors_" [(arXiv)](https://arxiv.org/abs/2309.16848). 
 It includes the implementation of the genetic algorithm described in the paper, used to find the mentioned counterexample.
 
-![genetic_search](genetic_search.gif)
+<p align="center">
+  <img src="genetic_search.gif" width="600">
+</p>
 
 ## Installation
 
